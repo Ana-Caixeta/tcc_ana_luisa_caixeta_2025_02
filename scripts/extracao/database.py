@@ -1,7 +1,7 @@
 # C:\...\extracao\database.py
 
 import sqlite3
-import config  # Alterado de 'from . import config' para importação direta
+import config
 
 def clean_value(val):
     """Retorna None para valores considerados vazios, senão retorna o próprio valor."""

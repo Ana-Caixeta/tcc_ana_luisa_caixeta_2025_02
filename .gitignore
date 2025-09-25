@@ -1,0 +1,16 @@
+# Ignorar ambiente virtual
+venv/
+.venv/
+
+# Ignorar banco de dados
+integra.db
+
+# Ignorar arquivos temporários do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar arquivos de cache do VSCode, PyCharm etc.
+.vscode/
+.idea/
