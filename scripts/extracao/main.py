@@ -116,11 +116,11 @@ class ScraperApp(tk.Tk):
     async def _runner(self, sigla, callbacks):
         """Corrotina principal que chama a lógica de scraping."""
         if sigla == "TODAS":
-            for s, (url, uf) in INSTITUICOES.items():
+            for s, (_, url, uf) in INSTITUICOES.items():
                 await run_for_institution(s, url, uf, self.db_manager, callbacks)
                 self.after(0, self.atualizar_tabela_status)
         else:
-            url, uf = INSTITUICOES[sigla]
+            _, url, uf = INSTITUICOES[sigla]
             await run_for_institution(sigla, url, uf, self.db_manager, callbacks)
         
     def scraping_finished(self, sigla):

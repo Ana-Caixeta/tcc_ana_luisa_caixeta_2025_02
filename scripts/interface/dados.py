@@ -6,7 +6,7 @@ import pandas as pd
 def carregar_dados():
     """Carrega o arquivo parquet dos TCCs e valida colunas essenciais."""
     try:
-        df = pd.read_parquet("tccs_dashboard.parquet")
+        df = pd.read_parquet("scripts\interface\\tccs_dashboard.parquet")
         required_cols = [
             'titulo', 'autores', 'ano', 'instituicao',  
             'resumo', 'resumo_processado', 'curso', 'nome_topico', 'orientador'

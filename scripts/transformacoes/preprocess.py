@@ -17,7 +17,7 @@ import time
 
 # --- CONFIGURAÇÕES ---
 PROCESSED_DB_NAME = "datamart.db"
-OUTPUT_FILENAME = "tccs_dashboard.parquet"
+OUTPUT_FILENAME = "scripts\interface\\tccs_dashboard.parquet"
 N_TOPICS = 10
 
 # --- FUNÇÕES AUXILIARES ---
