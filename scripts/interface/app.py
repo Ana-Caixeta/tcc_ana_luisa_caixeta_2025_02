@@ -25,7 +25,8 @@ st.set_page_config(
 aplicar_estilo()
 
 # Carregar os dados usando a função presente no dados.py
-df = carregar_dados()
+with st.spinner("🚀 Carregando o projeto e preparando os dados..."):
+    df = carregar_dados()
 
 # Definindo o header
 st.markdown("""
