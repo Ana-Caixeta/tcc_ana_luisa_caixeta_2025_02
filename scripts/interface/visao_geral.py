@@ -50,3 +50,13 @@ def exibir(df):
         top_cursos = df['curso'].value_counts().head(5).reset_index()
         top_cursos.columns = ['Curso', 'TCCs']
         st.dataframe(top_cursos, hide_index=True, width='stretch')
+
+
+    st.markdown("---")
+    st.subheader("Tabela Completa de Dados")
+    st.caption("Visualização de todos os TCCs conforme os filtros aplicados.")
+    total_linhas = len(df)
+    st.markdown(f"**Total exibido:** {total_linhas:,} registros".replace(",", "."))
+
+    df_ordenado = df.sort_values(by='ano', ascending=False)
+    st.dataframe(df_ordenado, use_container_width=True, hide_index=True)
