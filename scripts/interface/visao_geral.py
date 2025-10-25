@@ -59,4 +59,4 @@ def exibir(df):
     st.markdown(f"**Total exibido:** {total_linhas:,} registros".replace(",", "."))
 
     df_ordenado = df.sort_values(by='ano', ascending=False)
-    st.dataframe(df_ordenado, use_container_width=True, hide_index=True)
+    st.dataframe(df_ordenado, width="stretch", hide_index=True)
