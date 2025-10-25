@@ -30,7 +30,7 @@ def exibir(df):
     df_tema_tempo['tema_simples'] = df_tema_tempo['nome_topico'].apply(simplificar_topico)
     fig_tema_tempo = px.line(df_tema_tempo, x='ano', y='count', color='tema_simples', markers=True, labels={'count': 'TCCs', 'ano': 'Ano', 'tema_simples': 'Tema'})
     fig_tema_tempo.update_layout(height=400, hovermode='x unified')
-    st.plotly_chart(fig_tema_tempo, use_container_width=True)
+    st.plotly_chart(fig_tema_tempo, config = {'responsive': True})
 
     st.markdown("---")
     st.subheader("Análise por Tema")
@@ -70,7 +70,7 @@ def exibir(df):
             showlegend=False, 
             yaxis_autorange="reversed"
         )
-        st.plotly_chart(fig_cursos_tema, use_container_width=True)
+        st.plotly_chart(fig_cursos_tema, config = {'responsive': True})
 
     st.markdown("---")
     st.subheader("Mapa de Calor: Temas × Cursos")
@@ -82,6 +82,6 @@ def exibir(df):
         pivot_table.index = pivot_table.index.map(simplificar_topico)
         fig_heatmap = px.imshow(pivot_table, labels=dict(x="Curso", y="Tema", color="TCCs"), aspect='auto')
         fig_heatmap.update_layout(height=400)
-        st.plotly_chart(fig_heatmap, use_container_width=True)
+        st.plotly_chart(fig_heatmap, config = {'responsive': True})
     else:
         st.info("Dados insuficientes para gerar o mapa de calor.")

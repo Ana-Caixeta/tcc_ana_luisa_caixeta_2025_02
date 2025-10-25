@@ -56,7 +56,7 @@ def exibir(df):
                     textposition='outside'
                 ))
                 fig_tendencias.update_layout(height=500, xaxis_title="Score de Tendência", yaxis_title="", showlegend=False)
-                st.plotly_chart(fig_tendencias, use_container_width=True)
+                st.plotly_chart(fig_tendencias, config = {'responsive': True})
 
                 st.write("**Análise Detalhada de Tendências:**")
                 df_display = df_tendencias[['tema_simples', 'ultimo_valor', 'previsao_media', 'percentual_mudanca', 'classificacao']].copy()
@@ -65,7 +65,7 @@ def exibir(df):
                 df_display['TCCs Atuais'] = df_display['TCCs Atuais'].round(0).astype(int)
                 df_display['Previsão Média'] = df_display['Previsão Média'].round(1)
                 df_display['Mudança %'] = df_display['Mudança %'].round(1)
-                st.dataframe(df_display, hide_index=True, use_container_width=True, height=400)
+                st.dataframe(df_display, hide_index=True, width='stretch', height=400)
             else:
                 st.warning("Dados insuficientes para análise de tendências. Ajuste os filtros.")
 
@@ -80,13 +80,13 @@ def exibir(df):
                     fig_emergentes = px.bar(df_emergentes_chart.head(15), x='crescimento_pct', y='termo', orientation='h',
                                             labels={'crescimento_pct': 'Crescimento (%)', 'termo': 'Termo'})
                     fig_emergentes.update_layout(height=500, showlegend=False, yaxis_title="")
-                    st.plotly_chart(fig_emergentes, use_container_width=True)
+                    st.plotly_chart(fig_emergentes, config = {'responsive': True})
                 with col_right:
                     st.write("**Detalhamento dos Termos:**")
                     df_emerg_display = df_emergentes[['termo', 'freq_antiga', 'freq_recente', 'crescimento_pct']].copy()
                     df_emerg_display.columns = ['Termo', 'Freq. Antiga', 'Freq. Recente', 'Crescimento %']
                     df_emerg_display['Crescimento %'] = df_emerg_display['Crescimento %'].round(1)
-                    st.dataframe(df_emerg_display, hide_index=True, use_container_width=True, height=500)
+                    st.dataframe(df_emerg_display, hide_index=True, width='stretch', height=500)
             else:
                 st.warning("Não foi possível identificar termos emergentes. Verifique os dados.")
 
@@ -115,7 +115,7 @@ def exibir(df):
                         df_viz = _pd.concat([df_historico, df_previsao])
                         fig_previsao = px.line(df_viz, x='ano', y='count', color='tipo', markers=True, labels={'count': 'Quantidade de TCCs', 'ano': 'Ano'})
                         fig_previsao.update_layout(height=400)
-                        st.plotly_chart(fig_previsao, use_container_width=True)
+                        st.plotly_chart(fig_previsao, config = {'responsive': True})
                         col_a, col_b, col_c = st.columns(3)
                         with col_a:
                             st.metric("Último Ano Real", f"{int(df_tema_hist.iloc[-1]['count'])} TCCs")

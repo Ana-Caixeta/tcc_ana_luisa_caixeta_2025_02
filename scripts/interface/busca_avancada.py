@@ -108,6 +108,6 @@ def exibir(df):
                 df_sim_viz['similaridade_pct'] = df_sim_viz['similaridade'] * 100
                 fig_sim = px.bar(df_sim_viz, x='similaridade_pct', y='titulo_curto', orientation='h', labels={'similaridade_pct': 'Similaridade (%)', 'titulo_curto': 'TCC'})
                 fig_sim.update_layout(height=400, showlegend=False, yaxis_title="")
-                st.plotly_chart(fig_sim, use_container_width=True)
+                st.plotly_chart(fig_sim, config = {'responsive': True})
             else:
                 st.warning("Não foi possível calcular similaridades.")

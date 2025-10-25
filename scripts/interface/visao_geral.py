@@ -25,7 +25,7 @@ def exibir(df):
         df_ano = df.groupby('ano').size().reset_index(name='count')
         fig_ano = px.bar(df_ano, x='ano', y='count', labels={'count': 'Quantidade', 'ano': 'Ano'})
         fig_ano.update_layout(height=400, showlegend=False, yaxis_title="Quantidade de TCCs")
-        st.plotly_chart(fig_ano, use_container_width=True)
+        st.plotly_chart(fig_ano, config = {'responsive': True})
 
     with col_right:
         st.subheader("Distribuição por Tema")
@@ -34,7 +34,7 @@ def exibir(df):
         df_topicos['tema_simples'] = df_topicos['tema'].apply(simplificar_topico)
         fig_pizza = px.pie(df_topicos, values='count', names='tema_simples', hole=0.4)
         fig_pizza.update_layout(height=400, showlegend=True)
-        st.plotly_chart(fig_pizza, use_container_width=True)
+        st.plotly_chart(fig_pizza, config = {'responsive': True})
 
     st.markdown("---")
 
@@ -44,9 +44,9 @@ def exibir(df):
         st.subheader("Top 5 Instituições")
         top_inst = df['instituicao'].value_counts().head(5).reset_index()
         top_inst.columns = ['Instituição', 'TCCs']
-        st.dataframe(top_inst, hide_index=True, use_container_width=True)
+        st.dataframe(top_inst, hide_index=True, width='stretch')
     with col2:
         st.subheader("Top 5 Cursos")
         top_cursos = df['curso'].value_counts().head(5).reset_index()
         top_cursos.columns = ['Curso', 'TCCs']
-        st.dataframe(top_cursos, hide_index=True, use_container_width=True)
+        st.dataframe(top_cursos, hide_index=True, width='stretch')

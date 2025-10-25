@@ -30,7 +30,7 @@ def exibir(df):
     top_orient = df_orient.head(15).copy().sort_values('qtd_orientacoes', ascending=True)
     fig_orient = px.bar(top_orient, x='qtd_orientacoes', y='orientador', orientation='h', labels={'qtd_orientacoes': 'Orientações', 'orientador': 'Orientador'})
     fig_orient.update_layout(height=600, showlegend=False, yaxis_title="")
-    st.plotly_chart(fig_orient, use_container_width=True)
+    st.plotly_chart(fig_orient, config = {'responsive': True})
 
     st.markdown("---")
     
@@ -54,7 +54,7 @@ def exibir(df):
         df_prof_tempo = df_prof.groupby('ano').size().reset_index(name='count')
         fig_prof_tempo = px.line(df_prof_tempo, x='ano', y='count', markers=True, labels={'count': 'Orientações', 'ano': 'Ano'})
         fig_prof_tempo.update_layout(height=250, showlegend=False)
-        st.plotly_chart(fig_prof_tempo, use_container_width=True)
+        st.plotly_chart(fig_prof_tempo, config = {'responsive': True})
 
     st.markdown("---")
     st.subheader("Ranking Completo de Orientadores")
@@ -62,4 +62,4 @@ def exibir(df):
     df_orient_display['tema_simples'] = df_orient_display['tema_principal'].apply(simplificar_topico)
     df_orient_display = df_orient_display[['orientador', 'qtd_orientacoes', 'tema_simples']]
     df_orient_display.columns = ['Orientador', 'Orientações', 'Tema Principal']
-    st.dataframe(df_orient_display, hide_index=True, use_container_width=True, height=400)
+    st.dataframe(df_orient_display, hide_index=True, width='stretch', height=400)

@@ -33,7 +33,7 @@ def exibir(df):
     fig_inst.add_trace(go.Bar(name='Orientadores', x=top_inst_chart['instituicao'], y=top_inst_chart['qtd_orientadores']))
     fig_inst.add_trace(go.Bar(name='Cursos', x=top_inst_chart['instituicao'], y=top_inst_chart['qtd_cursos']))
     fig_inst.update_layout(barmode='group', height=400, xaxis_tickangle=-45)
-    st.plotly_chart(fig_inst, use_container_width=True)
+    st.plotly_chart(fig_inst, config = {'responsive': True})
 
     st.markdown("---")
     st.subheader("Análise Detalhada")
@@ -59,7 +59,7 @@ def exibir(df):
         df_inst_tempo = df_inst_det.groupby('ano').size().reset_index(name='count')
         fig_inst_tempo = px.area(df_inst_tempo, x='ano', y='count', labels={'count': 'TCCs', 'ano': 'Ano'})
         fig_inst_tempo.update_layout(height=300)
-        st.plotly_chart(fig_inst_tempo, use_container_width=True)
+        st.plotly_chart(fig_inst_tempo, config = {'responsive': True})
 
         st.subheader("Distribuição Temática")
         temas_inst = df_inst_det['nome_topico'].value_counts().head(5).reset_index()
@@ -67,4 +67,4 @@ def exibir(df):
         temas_inst['tema_simples'] = temas_inst['tema'].apply(simplificar_topico)
         fig_temas_inst = px.bar(temas_inst, x='tema_simples', y='count', labels={'count': 'TCCs', 'tema_simples': 'Tema'})
         fig_temas_inst.update_layout(height=300, showlegend=False)
-        st.plotly_chart(fig_temas_inst, use_container_width=True)
+        st.plotly_chart(fig_temas_inst, config = {'responsive': True})
