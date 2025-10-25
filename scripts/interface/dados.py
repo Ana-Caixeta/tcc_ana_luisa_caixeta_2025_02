@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
+import os
 
 @st.cache_data
 def carregar_dados():
     """Carrega o arquivo parquet dos TCCs e valida colunas essenciais."""
     try:
-        df = pd.read_parquet("scripts\interface\\tccs_dashboard.parquet")
+        BASE_DIR = os.path.dirname(__file__)
+        file_path = os.path.join(BASE_DIR, "tccs_dashboard.parquet")
+        df = pd.read_parquet(file_path)
         required_cols = [
             'titulo', 'autores', 'ano', 'instituicao',  
             'resumo', 'resumo_processado', 'curso', 'nome_topico', 'orientador'
