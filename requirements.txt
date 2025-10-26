@@ -10,3 +10,4 @@ wordcloud==1.9.2
 streamlit
 sqlalchemy
 pyarrow
+unidecode>=1.3.6

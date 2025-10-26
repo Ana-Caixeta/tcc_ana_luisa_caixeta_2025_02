@@ -14,11 +14,61 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 import time
+from unidecode import unidecode
 
 # --- CONFIGURAÇÕES ---
 PROCESSED_DB_NAME = "datamart.db"
 OUTPUT_FILENAME = "scripts\interface\\tccs_dashboard.parquet"
-N_TOPICS = 10
+N_TOPICS = 100
+
+IGNORED_WORDS = set([
+    # Conjunções, preposições e palavras comuns
+    "apos", "atraves", "assim", "como", "com", "de", "da", "do", "dos", "das",
+    "em", "e", "entre", "na", "no", "ou", "por", "sob", "sobre", "partir",
+    "nao", "segundo", "dentro", "tendo",
+
+    # Instituição, siglas e cargos
+    "aluno", "alunos", "automacao", "brasileira", "ciencia", "Coorientacao", "faculdade",
+    "if", "ifb", "ifba", "ifg", "ifgo", "instituicao", "instituto", "orientador",
+    "pessoa", "professor", "sigla", "universidade", "tecnico", "publica", "federal",
+    "secretariado", "popular",
+
+    # Trabalho, documentação e TCC
+    "aplicacao", "avaliacao", "conclusao", "conclusao_de_curso", "consideracoes",
+    "dissertacao", "implementacao", "introducao", "metodologia", "objetivo", "objetivos",
+    "palavra", "palavras", "projeto", "referencias", "resumo", "tcc", "trabalho", "comparativo",
+    "ensino", "medio", "ensino medio", "curso", "superior", "educacao", "profissional",
+    "educacao profissional", "docentes", "docencia",
+
+    # Termos genéricos de pesquisa e TCC
+    "abordagem", "analise", "aplicada", "aplicacoes", "aspectos", "base", "baseado",
+    "banca", "caso", "cursos", "dados", "desenvolvimento", "durante", "estrategia",
+    "estrategias", "estudo", "eja", "ferramenta", "informacao", "informacoes",
+    "licenciatura", "modelagem", "modelo", "modelos", "municipal", "novos", "pesquisa",
+    "possiveis", "processo", "processos", "proposta", "propostas", "resultado",
+    "tecnica", "tecnicas", "tecnologia", "tecnologias", "uso", "utilizacao", "usando",
+    "perspectiva", "prof", "projetos", "docente", "formacao", "pedagogica", "didatico",
+    "metodos", "problemas", "resolucao", "tema", "sistema", "sistemas", "controle",
+
+    # Termos administrativos e vagos
+    "acerca", "acoes", "acesso", "alternativa", "aprendizado", "aplicado", "areas",
+    "biologia", "conceitos", "comparativa", "contribuicao", "contribuicoes",
+    "contexto", "criancas", "deteccao", "diferentes", "dimensionamento", "elaboracao",
+    "ensinoaprendizagem", "experiencia", "foco", "forma", "funcao", "impactos",
+    "identificacao", "material", "melhoria", "novo", "novas", "periodo", "presente",
+    "prototipo", "reflexoes", "relacoes", "representacao", "resultado", "sequencia",
+    "setor", "simulacao", "uso", "utilizando", "visao", "perspectivas", "indicadores",
+
+    # Estados brasileiros e cidades
+    "acre", "alagoas", "amapa", "amazonas", "anapolis", "aparecida", "bahia", "ceara",
+    "cidade", "distrito federal", "espirito santo", "formosa", "goias", "goiania",
+    "goianiago", "jatai", "joao", "maranhao", "mato grosso", "mato grosso do sul",
+    "minas gerais", "para", "paraiba", "parana", "pernambuco", "piaui", "porto",
+    "rio", "rio de janeiro", "rio grande do norte", "rio grande do sul", "rondonia",
+    "roraima", "salvador", "santa catarina", "sao paulo", "sergipe", "tocantins",
+    "municipio", "brasil", "brasilia", "campus", "brasileiro", "sao", "paulo", "sao paulo",
+    "uruacu",
+])
 
 # --- FUNÇÕES AUXILIARES ---
 
@@ -32,15 +82,19 @@ def setup_nltk():
         print("--> Download concluído.")
 
 def preprocess_text(text):
-    """Limpa e normaliza o texto para o modelo."""
+    """Limpa e normaliza o texto para o modelo, ignorando palavras irrelevantes."""
     if not isinstance(text, str):
         return ""
     
     text = text.lower()
-    text = re.sub(r'[^a-zA-Z\s]', '', text, re.I|re.A)
+    text = unidecode(text)
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    
     tokens = text.split()
     stop_words = set(stopwords.words('portuguese'))
-    tokens = [word for word in tokens if len(word) > 2 and word not in stop_words]
+    
+    # Remove stopwords e palavras irrelevantes
+    tokens = [word for word in tokens if len(word) > 2 and word not in stop_words and word not in IGNORED_WORDS]
     return " ".join(tokens)
 
 def get_topic_name(topic_idx, top_words):

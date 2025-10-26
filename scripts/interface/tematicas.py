@@ -85,3 +85,6 @@ def exibir(df):
         st.plotly_chart(fig_heatmap, config = {'responsive': True})
     else:
         st.info("Dados insuficientes para gerar o mapa de calor.")
+
+
+    #st.dataframe(df_temas)
