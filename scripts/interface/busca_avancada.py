@@ -1,21 +1,35 @@
 # -*- coding: utf-8 -*-
+import pandas as pd
 import streamlit as st
 import plotly.express as px
+from unidecode import unidecode
 from utilitarios import calcular_similaridade, simplificar_topico
 
 def exibir(df):
     st.subheader("Busca Avançada e Similaridade")
     col1, col2 = st.columns([3, 1])
     with col1:
-        busca = st.text_input("Buscar em títulos e resumos", "")
+        busca = st.text_input("Busque o TCC desejado por título, resumo, autor ou orientador", "")
     with col2:
         limite_resultados = st.number_input("Limite", min_value=5, max_value=100, value=20, step=5)
 
     if busca:
-        mask = (
-            df['titulo'].str.contains(busca, case=False, na=False) |
-            df['resumo'].str.contains(busca, case=False, na=False)
-        )
+        #mask = (
+         #   df['titulo'].str.contains(busca, case=False, na=False) |
+          #  df['resumo'].str.contains(busca, case=False, na=False) |
+           # df['autores'].str.contains(busca, case=False, na=False) |
+            #df['orientador'].str.contains(busca, case=False, na=False)
+        #)
+        termos = [unidecode(t.lower()) for t in busca.strip().split()]
+
+        # Função para verificar se todos os termos aparecem em algum campo
+        def linha_corresponde(row):
+            campos = ['titulo', 'resumo', 'autores', 'orientador']
+            row_textos = " ".join([str(row[c]) for c in campos if pd.notnull(row[c])])
+            row_textos_norm = unidecode(row_textos.lower())
+            return all(termo in row_textos_norm for termo in termos)
+
+        mask = df.apply(linha_corresponde, axis=1)
         df_busca = df[mask].head(limite_resultados)
         st.success(f"Encontrados {len(df_busca)} resultados")
         for idx, row in df_busca.iterrows():
@@ -29,9 +43,11 @@ def exibir(df):
                 with col_b:
                     st.write(f"**Instituição:** {row['instituicao']}")
                     st.write(f"**Tema:** {simplificar_topico(row['nome_topico'])}")
-                st.write("**Resumo:**")
-                resumo_preview = str(row['resumo'])[:300] + "..." if len(str(row['resumo'])) > 300 else str(row['resumo'])
-                st.write(resumo_preview)
+                resumo_texto = row['resumo']
+                if resumo_texto and resumo_texto.strip():
+                    st.write("**Resumo:**")
+                    resumo_preview = resumo_texto[:300] + "..." if len(resumo_texto) > 300 else resumo_texto
+                    st.write(resumo_preview)
 
                 if st.button(f"Encontrar TCCs similares", key=f"sim_{idx}"):
                     st.session_state[f'buscar_similar_{idx}'] = True
