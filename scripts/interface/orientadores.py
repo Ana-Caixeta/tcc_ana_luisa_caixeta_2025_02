@@ -12,7 +12,7 @@ def exibir(df):
     df_orient.columns = ['orientador', 'qtd_orientacoes', 'tema_principal']
     df_orient = df_orient.sort_values('qtd_orientacoes', ascending=False)
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     with col1:
         metric_bold("Total de Orientadores", len(df_orient))
     with col2:
@@ -20,9 +20,6 @@ def exibir(df):
     with col3:
         max_orientacoes = int(df_orient['qtd_orientacoes'].max()) if not df_orient.empty else 0
         metric_bold("Máximo Orientações", max_orientacoes)
-    with col4:
-        orientador_top = df_orient.iloc[0]['orientador'] if not df_orient.empty else 'N/A'
-        metric_bold("Orientador Mais Ativo", orientador_top)
 
     st.markdown("---")
 

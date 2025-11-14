@@ -19,45 +19,45 @@ from unidecode import unidecode
 # --- CONFIGURAÇÕES ---
 PROCESSED_DB_NAME = "datamart.db"
 OUTPUT_FILENAME = "scripts\interface\\tccs_dashboard.parquet"
-N_TOPICS = 10
+N_TOPICS = 20
 
 IGNORED_WORDS = set([
     # Conjunções, preposições e palavras comuns
     "apos", "atraves", "assim", "como", "com", "de", "da", "do", "dos", "das",
     "em", "e", "entre", "na", "no", "ou", "por", "sob", "sobre", "partir",
-    "nao", "segundo", "dentro", "tendo",
+    "nao", "segundo", "dentro", "tendo", "ano", "anos",
 
     # Instituição, siglas e cargos
-    "aluno", "alunos", "automacao", "brasileira", "ciencia", "Coorientacao", "faculdade",
+    "aluno", "alunos", "brasileira", "ciencia", "Coorientacao", "faculdade",
     "if", "ifb", "ifba", "ifg", "ifgo", "instituicao", "instituto", "orientador",
     "pessoa", "professor", "sigla", "universidade", "tecnico", "publica", "federal",
-    "secretariado", "popular",
+    "secretariado", "popular", "estagio", "defesa", "analise",
 
     # Trabalho, documentação e TCC
-    "aplicacao", "avaliacao", "conclusao", "conclusao_de_curso", "consideracoes",
-    "dissertacao", "implementacao", "introducao", "metodologia", "objetivo", "objetivos",
+    "avaliacao", "conclusao", "conclusao_de_curso", "consideracoes",
+    "dissertacao", "introducao", "metodologia", "objetivo", "objetivos",
     "palavra", "palavras", "projeto", "referencias", "resumo", "tcc", "trabalho", "comparativo",
     "ensino", "medio", "ensino medio", "curso", "superior", "educacao", "profissional",
     "educacao profissional", "docentes", "docencia",
 
     # Termos genéricos de pesquisa e TCC
-    "abordagem", "analise", "aplicada", "aplicacoes", "aspectos", "base", "baseado",
-    "banca", "caso", "cursos", "dados", "desenvolvimento", "durante", "estrategia",
+    "abordagem", "aspectos", "base", "baseado",
+    "banca", "caso", "cursos", "durante", "estrategia",
     "estrategias", "estudo", "eja", "ferramenta", "informacao", "informacoes",
     "licenciatura", "modelagem", "modelo", "modelos", "municipal", "novos", "pesquisa",
     "possiveis", "processo", "processos", "proposta", "propostas", "resultado",
-    "tecnica", "tecnicas", "tecnologia", "tecnologias", "uso", "utilizacao", "usando",
+    "tecnica", "tecnicas", "uso", "utilizacao", "usando",
     "perspectiva", "prof", "projetos", "docente", "formacao", "pedagogica", "didatico",
     "metodos", "problemas", "resolucao", "tema", "sistema", "sistemas", "controle",
 
     # Termos administrativos e vagos
-    "acerca", "acoes", "acesso", "alternativa", "aprendizado", "aplicado", "areas",
+    "acerca", "acoes", "acesso", "alternativa", "aplicado", "areas",
     "biologia", "conceitos", "comparativa", "contribuicao", "contribuicoes",
     "contexto", "criancas", "deteccao", "diferentes", "dimensionamento", "elaboracao",
     "ensinoaprendizagem", "experiencia", "foco", "forma", "funcao", "impactos",
     "identificacao", "material", "melhoria", "novo", "novas", "periodo", "presente",
     "prototipo", "reflexoes", "relacoes", "representacao", "resultado", "sequencia",
-    "setor", "simulacao", "uso", "utilizando", "visao", "perspectivas", "indicadores",
+    "setor", "simulacao", "uso", "utilizando", "visao", "perspectivas", "indicadores", "livros"
 
     # Estados brasileiros e cidades
     "acre", "alagoas", "amapa", "amazonas", "anapolis", "aparecida", "bahia", "ceara",
@@ -67,7 +67,7 @@ IGNORED_WORDS = set([
     "rio", "rio de janeiro", "rio grande do norte", "rio grande do sul", "rondonia",
     "roraima", "salvador", "santa catarina", "sao paulo", "sergipe", "tocantins",
     "municipio", "brasil", "brasilia", "campus", "brasileiro", "sao", "paulo", "sao paulo",
-    "uruacu",
+    "uruacu", "sul", "sudeste", "centro-oeste", "norte", "nordeste", "distrito", "federal", "centro", "oeste", "santa", "estadual"
 ])
 
 # --- FUNÇÕES AUXILIARES ---
@@ -163,7 +163,7 @@ def main():
     
     lda = LatentDirichletAllocation(n_components=N_TOPICS, random_state=42, n_jobs=-1)
     topic_results = lda.fit_transform(X)
-    print("   - Modelagem concluída.")
+    print("Modelagem concluída.")
 
     # 4. Gerar nomes para os temas
     print("4. Gerando nomes interpretáveis para os temas...")
@@ -179,7 +179,7 @@ def main():
     print("5. Atribuindo o tema principal a cada TCC...")
     df['id_topico'] = topic_results.argmax(axis=1)
     df['nome_topico'] = df['id_topico'].map(topic_name_mapping)
-    print("   - Atribuição concluída.")
+    print("Atribuição concluída.")
 
     # 6. Salvar o resultado final
     print(f"6. Salvando o DataFrame enriquecido em '{OUTPUT_FILENAME}'...")
