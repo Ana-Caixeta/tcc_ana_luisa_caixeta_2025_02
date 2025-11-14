@@ -19,7 +19,7 @@ from unidecode import unidecode
 # --- CONFIGURAÇÕES ---
 PROCESSED_DB_NAME = "datamart.db"
 OUTPUT_FILENAME = "scripts\interface\\tccs_dashboard.parquet"
-N_TOPICS = 100
+N_TOPICS = 10
 
 IGNORED_WORDS = set([
     # Conjunções, preposições e palavras comuns
