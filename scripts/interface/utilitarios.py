@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.linear_model import LinearRegression
+from unidecode import unidecode
 
 def metric_bold(label, value):
     """Cria métrica com texto e valor em negrito dentro de um card de altura fixa."""
@@ -47,16 +48,44 @@ def metric_bold(label, value):
     """, unsafe_allow_html=True)
 
 def filtrar_dados(df, instituicoes, anos, topicos, cursos):
-    """Aplica os filtros selecionados no dataframe."""
+    """
+    Aplica os filtros selecionados no dataframe.
+    O filtro de cursos agora funciona como uma busca textual (LIKE),
+    ignorando maiúsculas/minúsculas e acentuação.
+    """
     df_f = df.copy()
+
+    # 1. Filtro de Instituições
     if instituicoes:
         df_f = df_f[df_f['instituicao'].isin(instituicoes)]
+
+    # 2. Filtro de Anos
     if anos:
         df_f = df_f[df_f['ano'].between(anos[0], anos[1])]
+
+    # 3. Filtro de Tópicos
     if topicos:
         df_f = df_f[df_f['nome_topico'].isin(topicos)]
+
+    # 4. Filtro de Cursos (Lógica LIKE + Sem Acento + Case Insensitive)
     if cursos:
-        df_f = df_f[df_f['curso'].isin(cursos)]
+        # Se 'cursos' for uma lista (ex: do multiselect), juntamos com '|' para criar um OR no regex
+        # Se for apenas uma string (ex: campo de texto), usamos ela direto.
+        if isinstance(cursos, list):
+            # Normaliza cada termo da lista (remove acento e põe minúsculo)
+            termos_normalizados = [unidecode(str(c)).lower() for c in cursos]
+            # Cria um padrão regex: "computacao|civil|mecatronica"
+            pattern = '|'.join(termos_normalizados)
+        else:
+            pattern = unidecode(str(cursos)).lower()
+
+        # Cria uma série temporária normalizada da coluna do dataframe para comparação
+        # .apply(unidecode) pode ser lento em milhões de linhas, mas é seguro e robusto.
+        coluna_normalizada = df_f['curso_unificado'].astype(str).apply(lambda x: unidecode(x).lower())
+        
+        # Filtra onde a coluna normalizada contem o padrão (regex=True permite o uso de OR '|')
+        df_f = df_f[coluna_normalizada.str.contains(pattern, regex=True, na=False)]
+
     return df_f
 
 def simplificar_topico(nome_topico):

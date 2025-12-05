@@ -9,7 +9,7 @@ def exibir(df):
     df_inst = df.groupby('instituicao').agg({
         'titulo': 'count',
         'orientador': 'nunique',
-        'curso': 'nunique',
+        'curso_unificado': 'nunique',
         'nome_topico': 'nunique'
     }).reset_index()
     df_inst.columns = ['instituicao', 'qtd_tccs', 'qtd_orientadores', 'qtd_cursos', 'qtd_temas']
@@ -46,10 +46,10 @@ def exibir(df):
         with col_b:
             st.metric("Orientadores", df_inst_det['orientador'].nunique())
         with col_c:
-            st.metric("Cursos", df_inst_det['curso'].nunique())
+            st.metric("Cursos", df_inst_det['curso_unificado'].nunique())
 
         st.write("**Top 5 Cursos:**")
-        top_cursos_inst = df_inst_det['curso'].value_counts().head(5)
+        top_cursos_inst = df_inst_det['curso_unificado'].value_counts().head(5)
         for curso, count in top_cursos_inst.items():
             st.write(f"• {curso}: {count} TCCs")
 

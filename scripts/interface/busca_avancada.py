@@ -39,7 +39,7 @@ def exibir(df):
                     st.write(f"**Autores:** {row['autores']}")
                     st.write(f"**Orientador:** {row['orientador']}")
                     st.write(f"**Ano:** {row['ano']}")
-                    st.write(f"**Curso:** {row['curso']}")
+                    st.write(f"**Curso:** {row['curso_unificado']}")
                 with col_b:
                     st.write(f"**Instituição:** {row['instituicao']}")
                     st.write(f"**Tema:** {simplificar_topico(row['nome_topico'])}")
@@ -94,7 +94,7 @@ def exibir(df):
                 st.write(f"**Ano:** {tcc_info['ano']}")
             with col_b:
                 st.write(f"**Instituição:** {tcc_info['instituicao']}")
-                st.write(f"**Curso:** {tcc_info['curso']}")
+                st.write(f"**Curso:** {tcc_info['curso_unificado']}")
                 st.write(f"**Tema:** {simplificar_topico(tcc_info['nome_topico'])}")
 
             df_similar = calcular_similaridade(df_reset, idx_sel, top_n=num_similares)
@@ -111,7 +111,7 @@ def exibir(df):
                             st.write(f"**Ano:** {sim_row['ano']}")
                         with col_y:
                             st.write(f"**Instituição:** {sim_row['instituicao']}")
-                            st.write(f"**Curso:** {sim_row['curso']}")
+                            st.write(f"**Curso:** {sim_row['curso_unificado']}")
                             st.write(f"**Tema:** {simplificar_topico(sim_row['nome_topico'])}")
                         st.write("**Resumo:**")
                         resumo_sim = str(sim_row['resumo'])[:250] + "..." if len(str(sim_row['resumo'])) > 250 else str(sim_row['resumo'])

@@ -12,7 +12,7 @@ def carregar_dados():
         df = pd.read_parquet(file_path)
         required_cols = [
             'titulo', 'autores', 'ano', 'instituicao',  
-            'resumo', 'resumo_processado', 'curso', 'nome_topico', 'orientador'
+            'resumo', 'resumo_processado', 'curso', 'nome_topico', 'orientador', 'curso_unificado'
         ]
         missing = [c for c in required_cols if c not in df.columns]
         if missing:

@@ -47,7 +47,7 @@ def exibir(df):
         st.dataframe(top_inst, hide_index=True, width='stretch')
     with col2:
         st.subheader("Top 5 Cursos")
-        top_cursos = df['curso'].value_counts().head(5).reset_index()
+        top_cursos = df['curso_unificado'].value_counts().head(5).reset_index()
         top_cursos.columns = ['Curso', 'TCCs']
         st.dataframe(top_cursos, hide_index=True, width='stretch')
 

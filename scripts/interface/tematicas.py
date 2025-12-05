@@ -8,7 +8,7 @@ def exibir(df):
     df_temas = df.groupby('nome_topico').agg({
         'titulo': 'count',
         'instituicao': 'nunique',
-        'curso': 'nunique'
+        'curso_unificado': 'nunique'
     }).reset_index()
     df_temas.columns = ['tema', 'qtd_tccs', 'qtd_instituicoes', 'qtd_cursos']
     df_temas = df_temas.sort_values('qtd_tccs', ascending=False)
@@ -43,7 +43,7 @@ def exibir(df):
         with col_b:
             st.metric("Instituições", df_tema_det['instituicao'].nunique())
         with col_c:
-            st.metric("Cursos", df_tema_det['curso'].nunique())
+            st.metric("Cursos", df_tema_det['curso_unificado'].nunique())
 
         st.write("**Top Palavras-Chave:**")
         keywords_tema = extract_keywords(df_tema_det['resumo_processado'], top_n=10)
@@ -62,9 +62,9 @@ def exibir(df):
     if tema_sel:
         df_tema_det = df[df['nome_topico'] == tema_sel]
         st.subheader("Cursos Relacionados")
-        cursos_tema = df_tema_det['curso'].value_counts().head(8).reset_index()
-        cursos_tema.columns = ['curso', 'count']
-        fig_cursos_tema = px.bar(cursos_tema, x='count', y='curso', orientation='h', labels={'count': 'TCCs', 'curso': 'Curso'})
+        cursos_tema = df_tema_det['curso_unificado'].value_counts().head(8).reset_index()
+        cursos_tema.columns = ['curso_unificado', 'count']
+        fig_cursos_tema = px.bar(cursos_tema, x='count', y='curso_unificado', orientation='h', labels={'count': 'TCCs', 'curso_unificado': 'Curso'})
         fig_cursos_tema.update_layout(
             height=350, 
             showlegend=False, 
@@ -74,11 +74,11 @@ def exibir(df):
 
     st.markdown("---")
     st.subheader("Mapa de Calor: Temas × Cursos")
-    top_cursos_heatmap = df['curso'].value_counts().head(6).index.tolist()
+    top_cursos_heatmap = df['curso_unificado'].value_counts().head(6).index.tolist()
     top_temas_heatmap = df_temas.head(6)['tema'].tolist()
-    df_heatmap = df[(df['curso'].isin(top_cursos_heatmap)) & (df['nome_topico'].isin(top_temas_heatmap))]
+    df_heatmap = df[(df['curso_unificado'].isin(top_cursos_heatmap)) & (df['nome_topico'].isin(top_temas_heatmap))]
     if not df_heatmap.empty:
-        pivot_table = df_heatmap.pivot_table(index='nome_topico', columns='curso', values='titulo', aggfunc='count', fill_value=0)
+        pivot_table = df_heatmap.pivot_table(index='nome_topico', columns='curso_unificado', values='titulo', aggfunc='count', fill_value=0)
         pivot_table.index = pivot_table.index.map(simplificar_topico)
         fig_heatmap = px.imshow(pivot_table, labels=dict(x="Curso", y="Tema", color="TCCs"), aspect='auto')
         fig_heatmap.update_layout(height=400)

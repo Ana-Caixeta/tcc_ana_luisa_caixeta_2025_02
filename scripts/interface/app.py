@@ -43,7 +43,7 @@ with st.sidebar:
     ano_max = int(df['ano'].max())
     anos = st.slider("Período", min_value=ano_min, max_value=ano_max, value=(ano_min, ano_max))
     inst = st.multiselect("Instituições", options=sorted(df['instituicao'].dropna().unique()))
-    cursos = st.multiselect("Cursos", options=sorted(df['curso'].dropna().unique()))
+    cursos = st.multiselect("Cursos", options=sorted(df['curso_unificado'].dropna().unique()))
     topicos = st.multiselect("Temas", options=sorted(df['nome_topico'].dropna().unique()))
 
 # Aplicar filtro utilizando a função filtrar_dados que foi definida no utilitarios.py
